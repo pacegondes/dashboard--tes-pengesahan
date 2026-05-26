@@ -1,223 +1,449 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pacegondes Project - Portal Tes KBM</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PORTAL TES PENGESAHAN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* WARNA UMUM */
+            --primary: #00AA5B; 
+            --verified-purple: #9b59b6;
+            --disabled: #9ca3af;
+            
+            /* MODE TERANG (DEFAULT) */
+            --bg-gradient-start: #00AA5B;
+            --bg-gradient-end: #008f4d;
+            --text-main: #ffffff;
+            --bg-card: #ffffff;
+            --text-card-title: #111827;
+            --text-card-sub: #4b5563;
+            --input-bg: #ffffff;
+            --input-text: #000000;
+            --input-placeholder: #6b7280;
+            --header-bg: rgba(255, 255, 255, 0.25);
+            --toggle-bg: rgba(255, 255, 255, 0.3);
+            --shadow-card: rgba(0,0,0,0.1);
+            --shadow-hard: #e0e0e0;
+        }
 
-<style>
-:root {
-  --bg-app: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
-  --glass-bg: rgba(255, 255, 255, 0.6);
-  --text-h: #1e3a8a;
-  --text-p: #4b5563;
-  --card-white: #ffffff;
-  --search-bg: #ffffff;
-  --clr-7: #26c6da; /* Cyan */
-  --clr-8: #ffa726; /* Orange */
-  --clr-9: #ef5350; /* Red/Pink */
-}
+        /* MODE GELAP */
+        body.dark-mode {
+            --bg-gradient-start: #0f172a;
+            --bg-gradient-end: #1e293b;
+            --text-main: #e2e8f0;
+            --bg-card: #1e293b;
+            --text-card-title: #f3f4f6;
+            --text-card-sub: #9ca3af;
+            --input-bg: #334155;
+            --input-text: #ffffff;
+            --input-placeholder: #cbd5e1;
+            --header-bg: rgba(30, 41, 59, 0.5);
+            --toggle-bg: rgba(0, 0, 0, 0.5);
+            --shadow-card: rgba(0,0,0,0.3);
+            --shadow-hard: #0f172a; /* Warna gelap untuk shadow card */
+        }
 
-[data-theme="dark"] {
-  --bg-app: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  --glass-bg: rgba(30, 41, 59, 0.7);
-  --text-h: #f1f5f9;
-  --text-p: #94a3b8;
-  --card-white: #1e293b;
-  --search-bg: #334155;
-}
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-image: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            color: var(--text-main);
+            transition: background-image 0.5s ease;
+        }
 
-body {
-  margin: 0; font-family: 'Inter', sans-serif;
-  background: var(--bg-app);
-  height: 100vh; display: flex; justify-content: center; align-items: center;
-  overflow: hidden; transition: all 0.5s ease;
-}
+        body { display: flex; flex-direction: column; }
 
-/* CONTAINER UTAMA (GLASS) */
-.main-container {
-  width: 90%; max-width: 1100px; height: 85vh;
-  background: var(--glass-bg);
-  backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-  border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 50px; display: flex; flex-direction: column;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  box-sizing: border-box;
-}
+        /* TOMBOL TOGGLE MODE */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--toggle-bg);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .theme-toggle:hover { transform: scale(1.1); }
 
-/* TOP NAVBAR (JUDUL & TOMBOL) */
-.nav-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; }
-.header-info { text-align: left; }
-.header-info h1 { margin: 0; font-size: 38px; font-weight: 800; color: var(--text-h); }
-.header-info h2 { margin: 5px 0; font-size: 22px; font-weight: 600; color: var(--text-h); opacity: 0.8; }
-.header-info p { margin: 0; color: var(--text-p); font-size: 14px; }
+        /* CUSTOM TOAST NOTIFICATION */
+        #customToast {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 14px;
+            z-index: 9999;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 2px solid #facc15;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+        }
+        #customToast.show { top: 30px; }
 
-.action-menu { display: flex; gap: 15px; }
-.icon-btn {
-  width: 45px; height: 45px; border-radius: 50%; border: none;
-  background: #fff; color: #1e3a8a; font-size: 18px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  transition: 0.3s;
-}
-.icon-btn:hover { transform: scale(1.1); }
+        .corner-robot {
+            position: fixed;
+            bottom: 70px;
+            right: 15px;
+            width: 100px;
+            z-index: 999;
+            pointer-events: none;
+            animation: floatRobot 4s infinite ease-in-out;
+        }
+        @keyframes floatRobot { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-/* SEARCH SECTION */
-.search-wrapper { position: relative; width: 100%; max-width: 500px; margin-bottom: 40px; }
-.search-wrapper i { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
-.search-wrapper input {
-  width: 100%; padding: 15px 25px; border-radius: 50px; border: none;
-  background: var(--search-bg); color: var(--text-h); font-size: 16px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05); outline: none;
-}
+        header {
+            text-align: center;
+            padding: 40px 0 10px;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            flex-shrink: 0;
+        }
 
-/* GRID RESULTS */
-.scroll-area { flex-grow: 1; overflow-y: auto; padding-right: 10px; }
-.scroll-area::-webkit-scrollbar { width: 6px; }
-.scroll-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
+        .logo-madrasah {
+            width: 100px;
+            height: 100px;
+            background: #ffffff;
+            border-radius: 50%;
+            padding: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 5px 0 #d1d1d1, inset 0 -4px 8px rgba(0,0,0,0.1);
+            border: 4px solid rgba(255, 255, 255, 0.5);
+            display: inline-block;
+            transform: perspective(500px) rotateX(10deg);
+        }
+        .logo-madrasah img { width: 100%; height: 100%; object-fit: contain; }
 
-.grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 25px; }
+        h1 {
+            font-size: clamp(24px, 6vw, 42px);
+            margin: 0 0 15px;
+            font-weight: 800;
+            color: var(--text-main);
+            text-shadow: 0 4px 10px rgba(0,0,0,.3);
+        }
 
-/* CARD DESIGN EXACT MOCKUP */
-.card {
-  background: var(--card-white); border-radius: 20px; overflow: hidden;
-  display: flex; flex-direction: column; align-items: center;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  transition: 0.3s ease; opacity: 0; transform: translateY(20px);
-  padding-bottom: 20px;
-}
-.card.show { opacity: 1; transform: translateY(0); }
-.card:hover { transform: translateY(-10px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+        .clock-container {
+            background: var(--header-bg);
+            padding: 8px 25px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 10px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1), 0 4px 0 rgba(255,255,255,0.2) inset;
+            transform: perspective(1000px) rotateX(10deg);
+            color: var(--text-main);
+        }
+        #digital-clock { font-size: 22px; font-weight: 800; }
 
-/* ACCENT STRIP */
-.card-header { width: 100%; height: 12px; margin-bottom: 20px; }
+        body.searching header {
+            margin-top: -320px;
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+        }
 
-.card .content { padding: 0 20px; text-align: center; flex-grow: 1; }
-.card .mapel { font-weight: 700; font-size: 18px; color: var(--text-h); margin-bottom: 10px; }
-.card .kelas-tag {
-  display: inline-block; padding: 5px 15px; border-radius: 20px;
-  font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 20px;
-}
+        .search-container {
+            padding: 35px;
+            flex-shrink: 0;
+            z-index: 1001;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        body.searching .search-container { padding-top: 40px; }
 
-.card .btn-action {
-  width: 80%; padding: 10px; border-radius: 12px; border: none;
-  color: #fff; font-weight: 700; cursor: pointer; transition: 0.3s;
-}
+        .search-wrapper {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .search-wrapper .icon { position: absolute; left: 30px; top: 50%; transform: translateY(-50%); font-size: 28px; color: var(--primary); z-index: 10; }
+        
+        input {
+            width: 100%;
+            padding: 25px 30px 25px 85px;
+            border-radius: 60px;
+            border: none;
+            font-size: 20px;
+            font-weight: 600;
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2), inset 0 -4px 0 rgba(0,0,0,0.1);
+            outline: none;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        input::placeholder { color: var(--input-placeholder); }
 
-/* COLOR LOGIC */
-.kls-7 .card-header, .kls-7 .kelas-tag, .kls-7 .btn-action { background: var(--clr-7); }
-.kls-8 .card-header, .kls-8 .kelas-tag, .kls-8 .btn-action { background: var(--clr-8); }
-.kls-9 .card-header, .kls-9 .kelas-tag, .kls-9 .btn-action { background: var(--clr-9); }
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 20px 80px;
+            display: none;
+            justify-content: center;
+        }
+        body.searching main { display: flex; opacity: 1; transform: translateY(0); }
 
-@media (max-width: 768px) {
-  .main-container { width: 100vw; height: 100vh; border-radius: 0; padding: 30px 20px; }
-  .nav-header { flex-direction: column; gap: 20px; }
-  .action-menu { position: absolute; top: 30px; right: 20px; }
-}
-</style>
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1100px;
+            align-content: start;
+        }
+
+        .card {
+            background: var(--bg-card);
+            color: var(--text-card-title);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 10px 0 var(--shadow-hard), 0 15px 30px var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+        }
+
+        .verified-header { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; }
+        .info-tag { font-size: 11px; font-weight: 800; color: var(--text-card-sub); text-transform: uppercase; }
+        .verified-badge { background: var(--verified-purple); color: #fff; border-radius: 50%; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; }
+
+        .badge-kelas {
+            background: var(--accent-color);
+            color: var(--text-color, #fff);
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        
+        .mapel { font-size: 26px; font-weight: 800; margin-bottom: 25px; line-height: 1.2; color: var(--text-card-title); }
+
+        .btn-mulai {
+            background: #00AA5B;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            font-size: 14px; 
+            font-weight: 800; 
+            text-transform: uppercase;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 5px 0 #008f4d;
+            transition: 0.2s;
+        }
+
+        .btn-disabled {
+            background: var(--disabled) !important;
+            box-shadow: 0 5px 0 #6b7280 !important;
+            cursor: pointer !important;
+            opacity: 0.7;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            text-align: center;
+            font-size: 12px;
+            z-index: 100;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            .results { grid-template-columns: 1fr; }
+            input { font-size: 17px; padding-left: 70px; }
+            body.searching header { margin-top: -380px; }
+        }
+    </style>
 </head>
 <body>
 
-<div class="main-container">
-  <div class="nav-header">
-    <div class="header-info">
-      <h1>Portal Tes</h1>
-      <h2>Pengesahan KBM</h2>
-      <p>MTs Amtsilati - Bangsri Jepara | <span id="currentDate"></span></p>
+    <div id="themeToggle" class="theme-toggle" onclick="toggleTheme()">
+        ☀️
     </div>
-    <div class="action-menu">
-      <button class="icon-btn" onclick="toggleTheme()" id="themeIco"><i class="fas fa-moon"></i></button>
-      <button class="icon-btn"><i class="fas fa-cog"></i></button>
-      <button class="icon-btn"><i class="fas fa-bars"></i></button>
+
+    <div id="customToast">
+        <span>⚠️</span> Link soal belum di-update oleh admin.
     </div>
-  </div>
 
-  <div class="search-wrapper">
-    <input type="text" id="searchInput" placeholder="Cari Mata Pelajaran...">
-    <i class="fas fa-search"></i>
-  </div>
+    <img src="https://i.ibb.co.com/mVzkz5xG/robot-removebg-preview.png" class="corner-robot">
 
-  <div class="scroll-area">
-    <div id="results" class="grid-cards">
-      </div>
-  </div>
-</div>
+    <header id="headerSection">
+        <div class="logo-madrasah">
+            <img src="https://i.ibb.co.com/1fHCTtJ5/logo.png">
+        </div>
+        <h1>PORTAL TES PENGESAHAN</h1>
+        <div class="clock-container">
+            <div id="digital-clock">00:00:00</div>
+        </div>
+    </header>
+
+    <div class="search-container">
+        <div class="search-wrapper">
+            <span class="icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Cari Mapel..." autocomplete="off">
+        </div>
+    </div>
+
+    <main id="appMain">
+        <div id="results" class="results"></div>
+    </main>
+
+    <footer>MTs AMTSILATI &copy; 2026</footer>
 
 <script>
-/**
- * DEEP DOCUMENTATION: APPLICATION LOGIC
- * Alur:
- * 1. Menampilkan tanggal hari ini menggunakan objek Date().
- * 2. Mengambil dan memparsing data CSV dari Google Sheets.
- * 3. Fungsi bukaSoal() menangani navigasi aman ke Google Form dengan cache-buster.
- */
+const searchInput = document.getElementById('searchInput');
+const body = document.body;
+const toast = document.getElementById('customToast');
+const themeToggle = document.getElementById('themeToggle');
 
-// Menampilkan Tanggal
-const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-document.getElementById('currentDate').innerText = new Date().toLocaleDateString('id-ID', options);
+// FUNGSI RESET HALAMAN (KEMBALI KE AWAL)
+function resetToHome() {
+    searchInput.value = "";
+    body.classList.remove('searching');
+    document.getElementById('results').innerHTML = '';
+}
 
+// EKSEKUSI RESET SAAT HALAMAN DI-RELOAD / DI-REFRESH
+// Menggunakan 'pageshow' agar tetap berjalan meskipun halaman di-load dari cache SEB (Back Button)
+window.addEventListener('pageshow', function (event) {
+    resetToHome();
+});
+
+// FUNGSI JAM
+function updateClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    document.getElementById('digital-clock').innerHTML = `${hours}:${minutes}:<span style="color: #facc15;">${seconds}</span>`;
+}
+setInterval(updateClock, 1000); updateClock();
+
+// FUNGSI DARK MODE
+function toggleTheme() {
+    body.classList.toggle('dark-mode');
+    const isDark = body.classList.contains('dark-mode');
+    themeToggle.innerHTML = isDark ? '🌙' : '☀️';
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+}
+
+// Cek preferensi tersimpan
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark') {
+    body.classList.add('dark-mode');
+    themeToggle.innerHTML = '🌙';
+}
+
+// DATA CSV
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGPq9jpsKX5zc9RIsZfEuqLMJ2GrucmiAjzlSezF8oVmA0SZ3-58mekFIFI59GhLiE3vyJ_K0Lx3Zv/pub?output=csv";
 let allData = [];
 
-function toggleTheme() {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
-  document.getElementById('themeIco').innerHTML = isDark ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+fetch(CSV_URL).then(res => res.text()).then(text => {
+    const lines = text.split(/\r?\n/).slice(1);
+    allData = lines.map(line => {
+        const c = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(x => x.replace(/^"|"$/g,'').trim());
+        return { kelas: c[0] || "", mapel: c[1] || "", link: c[2] || "" };
+    }).sort((a, b) => {
+        if (a.kelas !== b.kelas) return a.kelas.localeCompare(b.kelas, undefined, {numeric: true});
+        return a.mapel.localeCompare(b.mapel);
+    });
+});
+
+function isValidHttpUrl(string) {
+  let url;
+  try { url = new URL(string); } catch (_) { return false; }
+  return url.protocol === "http:" || url.protocol === "https:";
 }
 
-// Fungsi reload aman untuk ESB
-function bukaSoal(link) {
-    const freshLink = `${link}${link.includes('?') ? '&' : '?'}t=${new Date().getTime()}`;
-    window.location.replace(freshLink);
+// FUNGSI SHOW TOAST
+function showToast() {
+    toast.classList.add('show');
+    setTimeout(() => { toast.classList.remove('show'); }, 3000);
 }
 
-async function fetchCSV() {
-  try {
-    const res = await fetch(CSV_URL);
-    const text = await res.text();
-    allData = parseCSV(text);
-  } catch(e) { console.error(e); }
+function handleGoToLink(url, event) {
+    event.preventDefault();
+    if (!isValidHttpUrl(url)) {
+        showToast(); 
+        return false;
+    }
+    
+    // Sebelum berpindah halaman, reset dulu form agar saat di-back/selesai keadaan sudah di halaman awal
+    setTimeout(() => {
+        resetToHome();
+    }, 500);
+
+    // Buka tautan ujian di jendela yang sama agar SEB tidak membuka tab baru yang bisa dikunci
+    window.location.href = url;
 }
 
-function parseCSV(text) {
-  const lines = text.split(/\r?\n/);
-  const headers = lines.shift().split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(h=>h.trim().toLowerCase());
-  const iKelas = headers.indexOf("kelas"), iMapel = headers.indexOf("mapel"), iLink = headers.indexOf("link");
-  return lines.filter(l => l.trim()).map(line => {
-    const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c=>c.replace(/^"|"$/g,'').trim());
-    return { kelas: cols[iKelas], mapel: cols[iMapel], link: cols[iLink] };
-  });
+searchInput.addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    if (q.length > 0) {
+        body.classList.add('searching');
+        render(allData.filter(d => d.mapel.toLowerCase().includes(q) || d.kelas.toLowerCase().includes(q)));
+    } else {
+        document.getElementById('results').innerHTML = '';
+        body.classList.remove('searching');
+    }
+});
+
+searchInput.addEventListener('focus', () => { body.classList.add('searching'); });
+searchInput.addEventListener('blur', () => { if (searchInput.value.trim() === "") body.classList.remove('searching'); });
+
+function render(data) {
+    const container = document.getElementById('results');
+    container.innerHTML = "";
+    if (data.length === 0) return;
+
+    data.forEach(item => {
+        let accent = "#00AA5B", txt = "white";
+        if(item.kelas.includes("7")) accent = "#2563eb";
+        if(item.kelas.includes("8")) { accent = "#facc15"; txt = "#854d0e"; }
+        if(item.kelas.includes("9")) accent = "#dc2626";
+
+        const hasLink = isValidHttpUrl(item.link);
+        const btnClass = hasLink ? "btn-mulai" : "btn-mulai btn-disabled";
+        const btnText = hasLink ? "MULAI TES SEKARANG ➔" : "BELUM TERSEDIA";
+
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.setProperty('--accent-color', accent);
+        card.style.setProperty('--text-color', txt);
+        card.innerHTML = `
+            <div class="verified-header"><span class="info-tag">SOAL TES PENGESAHAN</span><div class="verified-badge">✓</div></div>
+            <div class="badge-kelas">KELAS ${item.kelas}</div>
+            <div class="mapel">${item.mapel}</div>
+            <button class="${btnClass}" onclick="handleGoToLink('${item.link}', event)">${btnText}</button>
+        `;
+        container.appendChild(card);
+    });
 }
-
-function renderResults(data) {
-  const container = document.getElementById("results");
-  container.innerHTML = "";
-  data.forEach((item, i) => {
-    const div = document.createElement("div");
-    let type = item.kelas.includes("7") ? "kls-7" : item.kelas.includes("8") ? "kls-8" : "kls-9";
-    div.className = `card ${type}`;
-    div.innerHTML = `
-      <div class="card-header"></div>
-      <div class="content">
-        <div class="mapel">${item.mapel}</div>
-        <div class="kelas-tag">Kelas ${item.kelas}</div>
-      </div>
-      <button class="btn-action" onclick="bukaSoal('${item.link}')">Buka Soal</button>
-    `;
-    container.appendChild(div);
-    setTimeout(() => div.classList.add("show"), 50 + i * 30);
-  });
-}
-
-document.getElementById("searchInput").oninput = function() {
-  const q = this.value.toLowerCase().trim();
-  if(!q) { document.getElementById("results").innerHTML = ""; return; }
-  renderResults(allData.filter(x => x.kelas.toLowerCase().includes(q) || x.mapel.toLowerCase().includes(q)));
-};
-
-fetchCSV();
 </script>
 </body>
 </html>
