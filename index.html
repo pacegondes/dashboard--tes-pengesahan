@@ -1,3 +1,8 @@
+Berikut adalah kode HTML penuh yang sudah diperbarui. Saya telah menambahkan detail **Nama Hari** (dalam bahasa Indonesia) pada jam digital di bagian header, serta menyesuaikan gaya tampilannya agar tetap serasi dan kontras (menggunakan warna kuning cerah pada nama hari agar mudah dibaca siswa).
+
+Semua fungsi optimasi untuk *Safe Exam Browser (SEB)* tetap dipertahankan dengan aman.
+
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -154,6 +159,7 @@
             color: var(--text-main);
         }
         #digital-clock { font-size: 22px; font-weight: 800; }
+        .hari-text { color: #facc15; text-transform: uppercase; margin-right: 6px; }
 
         body.searching header {
             margin-top: -320px;
@@ -298,7 +304,7 @@
         </div>
         <h1>PORTAL TES PENGESAHAN</h1>
         <div class="clock-container">
-            <div id="digital-clock">00:00:00</div>
+            <div id="digital-clock"><span class="hari-text">SENIN</span>, 00:00:00</div>
         </div>
     </header>
 
@@ -334,13 +340,20 @@ window.addEventListener('pageshow', function (event) {
     resetToHome();
 });
 
-// FUNGSI JAM
+// FUNGSI JAM + HARI
 function updateClock() {
     const now = new Date();
+    
+    // Array Nama Hari Indonesia
+    const daftarHari = ["MINGGU", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"];
+    const namaHari = daftarHari[now.getDay()];
+    
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const seconds = String(now.getSeconds()).padStart(2, '0');
-    document.getElementById('digital-clock').innerHTML = `${hours}:${minutes}:<span style="color: #facc15;">${seconds}</span>`;
+    
+    // Output gabungan Hari, Jam:Menit:Detik
+    document.getElementById('digital-clock').innerHTML = `<span class="hari-text">${namaHari}</span>, ${hours}:${minutes}:<span style="color: #facc15;">${seconds}</span>`;
 }
 setInterval(updateClock, 1000); updateClock();
 
@@ -447,3 +460,5 @@ function render(data) {
 </script>
 </body>
 </html>
+
+```
