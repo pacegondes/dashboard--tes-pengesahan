@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+<title>Pacegondes Project - Portal Tes KBM</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+  --bg-app: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --text-h: #1e3a8a;
+  --text-p: #4b5563;
+  --card-white: #ffffff;
+  --search-bg: #ffffff;
+  --clr-7: #26c6da; 
+  --clr-8: #ffa726; 
+  --clr-9: #ef5350; 
+}
+
+[data-theme="dark"] {
+  --bg-app: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  --glass-bg: rgba(30, 41, 59, 0.7);
+  --text-h: #f1f5f9;
+  --text-p: #94a3b8;
+  --card-white: #1e293b;
+  --search-bg: #334155;
+}
+
+body {
+  margin: 0; font-family: 'Inter', sans-serif;
+  background: var(--bg-app);
+  height: 100vh; display: flex; justify-content: center; align-items: center;
+  overflow: hidden; transition: all 0.5s ease;
+}
+
+.main-container {
+  width: 90%; max-width: 1100px; height: 85vh;
+  background: var(--glass-bg);
+  backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+  border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 50px; display: flex; flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+}
+
+.nav-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; }
+.header-info h1 { margin: 0; font-size: 38px; font-weight: 800; color: var(--text-h); }
+.header-info h2 { margin: 5px 0; font-size: 22px; font-weight: 600; color: var(--text-h); opacity: 0.8; }
+
+.search-wrapper { position: relative; width: 100%; max-width: 500px; margin-bottom: 40px; }
+.search-wrapper input {
+  width: 100%; padding: 15px 25px; border-radius: 50px; border: none;
+  background: var(--search-bg); color: var(--text-h); font-size: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05); outline: none;
+}
+
+.scroll-area { flex-grow: 1; overflow-y: auto; padding-right: 10px; }
+.grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 25px; }
+
+.card {
+  background: var(--card-white); border-radius: 20px; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transition: 0.3s ease; opacity: 0; transform: translateY(20px);
+  padding-bottom: 20px;
+}
+.card.show { opacity: 1; transform: translateY(0); }
+.card-header { width: 100%; height: 12px; margin-bottom: 20px; }
+.content { padding: 0 20px; text-align: center; flex-grow: 1; }
+.mapel { font-weight: 700; font-size: 18px; color: var(--text-h); margin-bottom: 10px; }
+.kelas-tag { display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 20px; }
+.btn-action { width: 80%; padding: 10px; border-radius: 12px; border: none; color: #fff; font-weight: 700; cursor: pointer; transition: 0.3s; }
+
+.kls-7 .card-header, .kls-7 .kelas-tag, .kls-7 .btn-action { background: var(--clr-7); }
+.kls-8 .card-header, .kls-8 .kelas-tag, .kls-8 .btn-action { background: var(--clr-8); }
+.kls-9 .card-header, .kls-9 .kelas-tag, .kls-9 .btn-action { background: var(--clr-9); }
+</style>
+</head>
+<body>
+
+<div class="main-container">
+  <div class="nav-header">
+    <div class="header-info">
+      <h1>Portal Tes</h1>
+      <h2>Pengesahan KBM</h2>
+      <p>MTs Amtsilati - Bangsri Jepara</p>
+    </div>
+  </div>
+
+  <div class="search-wrapper">
+    <input type="text" id="searchInput" placeholder="Cari Mata Pelajaran...">
+  </div>
+
+  <div class="scroll-area">
+    <div id="results" class="grid-cards"></div>
+  </div>
+</div>
+
+<script>
+/**
+ * DEEP DOCUMENTATION: APPLICATION LOGIC
+ * Alur:
+ * 1. Fetch data dari Google Sheets (CSV).
+ * 2. Parse data CSV ke dalam format objek.
+ * 3. Render kartu mata pelajaran.
+ * 4. Fungsi bukaSoal() menggunakan location.replace() dan timestamp
+ * untuk memastikan browser tidak terjebak di sesi sebelumnya.
+ */
+
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGPq9jpsKX5zc9RIsZfEuqLMJ2GrucmiAjzlSezF8oVmA0SZ3-58mekFIFI59GhLiE3vyJ_K0Lx3Zv/pub?output=csv";
+let allData = [];
+
+async function fetchCSV() {
+  try {
+    const res = await fetch(CSV_URL);
+    const text = await res.text();
+    allData = parseCSV(text);
+  } catch(e) { console.error("Error fetching data:", e); }
+}
+
+function parseCSV(text) {
+  const lines = text.split(/\r?\n/);
+  const headers = lines.shift().split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(h=>h.trim().toLowerCase());
+  const iKelas = headers.indexOf("kelas"), iMapel = headers.indexOf("mapel"), iLink = headers.indexOf("link");
+  return lines.filter(l => l.trim()).map(line => {
+    const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c=>c.replace(/^"|"$/g,'').trim());
+    return { kelas: cols[iKelas], mapel: cols[iMapel], link: cols[iLink] };
+  });
+}
+
+function bukaSoal(link) {
+    // Fungsi: Menangani navigasi ke link soal
+    // Tujuan: Memaksa reload ke awal dengan menghilangkan cache melalui parameter waktu
+    const cleanLink = `${link}${link.includes('?') ? '&' : '?'}t=${new Date().getTime()}`;
+    window.location.replace(cleanLink);
+}
+
+function renderResults(data) {
+  const container = document.getElementById("results");
+  container.innerHTML = "";
+  data.forEach((item, i) => {
+    const div = document.createElement("div");
+    let type = item.kelas.includes("7") ? "kls-7" : item.kelas.includes("8") ? "kls-8" : "kls-9";
+    div.className = `card ${type}`;
+    div.innerHTML = `
+      <div class="card-header"></div>
+      <div class="content">
+        <div class="mapel">${item.mapel}</div>
+        <div class="kelas-tag">Kelas ${item.kelas}</div>
+      </div>
+      <button class="btn-action" onclick="bukaSoal('${item.link}')">Buka Soal</button>
+    `;
+    container.appendChild(div);
+    setTimeout(() => div.classList.add("show"), 50 + i * 30);
+  });
+}
+
+document.getElementById("searchInput").oninput = function() {
+  const q = this.value.toLowerCase().trim();
+  if(!q) { document.getElementById("results").innerHTML = ""; return; }
+  renderResults(allData.filter(x => x.kelas.toLowerCase().includes(q) || x.mapel.toLowerCase().includes(q)));
+};
+
+fetchCSV();
+</script>
+</body>
+</html>
