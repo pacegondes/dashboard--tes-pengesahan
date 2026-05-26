@@ -3,10 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-
 <title>Pacegondes Project - Portal Tes KBM</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -19,9 +15,9 @@
   --text-p: #4b5563;
   --card-white: #ffffff;
   --search-bg: #ffffff;
-  --clr-7: #26c6da; 
-  --clr-8: #ffa726; 
-  --clr-9: #ef5350; 
+  --clr-7: #26c6da; /* Cyan */
+  --clr-8: #ffa726; /* Orange */
+  --clr-9: #ef5350; /* Red/Pink */
 }
 
 [data-theme="dark"] {
@@ -40,6 +36,7 @@ body {
   overflow: hidden; transition: all 0.5s ease;
 }
 
+/* CONTAINER UTAMA (GLASS) */
 .main-container {
   width: 90%; max-width: 1100px; height: 85vh;
   background: var(--glass-bg);
@@ -50,20 +47,40 @@ body {
   box-sizing: border-box;
 }
 
+/* TOP NAVBAR (JUDUL & TOMBOL) */
 .nav-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; }
+.header-info { text-align: left; }
 .header-info h1 { margin: 0; font-size: 38px; font-weight: 800; color: var(--text-h); }
 .header-info h2 { margin: 5px 0; font-size: 22px; font-weight: 600; color: var(--text-h); opacity: 0.8; }
+.header-info p { margin: 0; color: var(--text-p); font-size: 14px; }
 
+.action-menu { display: flex; gap: 15px; }
+.icon-btn {
+  width: 45px; height: 45px; border-radius: 50%; border: none;
+  background: #fff; color: #1e3a8a; font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: 0.3s;
+}
+.icon-btn:hover { transform: scale(1.1); }
+
+/* SEARCH SECTION */
 .search-wrapper { position: relative; width: 100%; max-width: 500px; margin-bottom: 40px; }
+.search-wrapper i { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
 .search-wrapper input {
   width: 100%; padding: 15px 25px; border-radius: 50px; border: none;
   background: var(--search-bg); color: var(--text-h); font-size: 16px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.05); outline: none;
 }
 
+/* GRID RESULTS */
 .scroll-area { flex-grow: 1; overflow-y: auto; padding-right: 10px; }
+.scroll-area::-webkit-scrollbar { width: 6px; }
+.scroll-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
+
 .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 25px; }
 
+/* CARD DESIGN EXACT MOCKUP */
 .card {
   background: var(--card-white); border-radius: 20px; overflow: hidden;
   display: flex; flex-direction: column; align-items: center;
@@ -72,15 +89,33 @@ body {
   padding-bottom: 20px;
 }
 .card.show { opacity: 1; transform: translateY(0); }
-.card-header { width: 100%; height: 12px; margin-bottom: 20px; }
-.content { padding: 0 20px; text-align: center; flex-grow: 1; }
-.mapel { font-weight: 700; font-size: 18px; color: var(--text-h); margin-bottom: 10px; }
-.kelas-tag { display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 20px; }
-.btn-action { width: 80%; padding: 10px; border-radius: 12px; border: none; color: #fff; font-weight: 700; cursor: pointer; transition: 0.3s; }
+.card:hover { transform: translateY(-10px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
 
+/* ACCENT STRIP */
+.card-header { width: 100%; height: 12px; margin-bottom: 20px; }
+
+.card .content { padding: 0 20px; text-align: center; flex-grow: 1; }
+.card .mapel { font-weight: 700; font-size: 18px; color: var(--text-h); margin-bottom: 10px; }
+.card .kelas-tag {
+  display: inline-block; padding: 5px 15px; border-radius: 20px;
+  font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 20px;
+}
+
+.card .btn-action {
+  width: 80%; padding: 10px; border-radius: 12px; border: none;
+  color: #fff; font-weight: 700; cursor: pointer; transition: 0.3s;
+}
+
+/* COLOR LOGIC */
 .kls-7 .card-header, .kls-7 .kelas-tag, .kls-7 .btn-action { background: var(--clr-7); }
 .kls-8 .card-header, .kls-8 .kelas-tag, .kls-8 .btn-action { background: var(--clr-8); }
 .kls-9 .card-header, .kls-9 .kelas-tag, .kls-9 .btn-action { background: var(--clr-9); }
+
+@media (max-width: 768px) {
+  .main-container { width: 100vw; height: 100vh; border-radius: 0; padding: 30px 20px; }
+  .nav-header { flex-direction: column; gap: 20px; }
+  .action-menu { position: absolute; top: 30px; right: 20px; }
+}
 </style>
 </head>
 <body>
@@ -90,16 +125,23 @@ body {
     <div class="header-info">
       <h1>Portal Tes</h1>
       <h2>Pengesahan KBM</h2>
-      <p>MTs Amtsilati - Bangsri Jepara</p>
+      <p>MTs Amtsilati - Bangsri Jepara | <span id="currentDate"></span></p>
+    </div>
+    <div class="action-menu">
+      <button class="icon-btn" onclick="toggleTheme()" id="themeIco"><i class="fas fa-moon"></i></button>
+      <button class="icon-btn"><i class="fas fa-cog"></i></button>
+      <button class="icon-btn"><i class="fas fa-bars"></i></button>
     </div>
   </div>
 
   <div class="search-wrapper">
     <input type="text" id="searchInput" placeholder="Cari Mata Pelajaran...">
+    <i class="fas fa-search"></i>
   </div>
 
   <div class="scroll-area">
-    <div id="results" class="grid-cards"></div>
+    <div id="results" class="grid-cards">
+      </div>
   </div>
 </div>
 
@@ -107,22 +149,36 @@ body {
 /**
  * DEEP DOCUMENTATION: APPLICATION LOGIC
  * Alur:
- * 1. Fetch data dari Google Sheets (CSV).
- * 2. Parse data CSV ke dalam format objek.
- * 3. Render kartu mata pelajaran.
- * 4. Fungsi bukaSoal() menggunakan location.replace() dan timestamp
- * untuk memastikan browser tidak terjebak di sesi sebelumnya.
+ * 1. Menampilkan tanggal hari ini menggunakan objek Date().
+ * 2. Mengambil dan memparsing data CSV dari Google Sheets.
+ * 3. Fungsi bukaSoal() menangani navigasi aman ke Google Form dengan cache-buster.
  */
+
+// Menampilkan Tanggal
+const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+document.getElementById('currentDate').innerText = new Date().toLocaleDateString('id-ID', options);
 
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGPq9jpsKX5zc9RIsZfEuqLMJ2GrucmiAjzlSezF8oVmA0SZ3-58mekFIFI59GhLiE3vyJ_K0Lx3Zv/pub?output=csv";
 let allData = [];
+
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeIco').innerHTML = isDark ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+}
+
+// Fungsi reload aman untuk ESB
+function bukaSoal(link) {
+    const freshLink = `${link}${link.includes('?') ? '&' : '?'}t=${new Date().getTime()}`;
+    window.location.replace(freshLink);
+}
 
 async function fetchCSV() {
   try {
     const res = await fetch(CSV_URL);
     const text = await res.text();
     allData = parseCSV(text);
-  } catch(e) { console.error("Error fetching data:", e); }
+  } catch(e) { console.error(e); }
 }
 
 function parseCSV(text) {
@@ -133,13 +189,6 @@ function parseCSV(text) {
     const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c=>c.replace(/^"|"$/g,'').trim());
     return { kelas: cols[iKelas], mapel: cols[iMapel], link: cols[iLink] };
   });
-}
-
-function bukaSoal(link) {
-    // Fungsi: Menangani navigasi ke link soal
-    // Tujuan: Memaksa reload ke awal dengan menghilangkan cache melalui parameter waktu
-    const cleanLink = `${link}${link.includes('?') ? '&' : '?'}t=${new Date().getTime()}`;
-    window.location.replace(cleanLink);
 }
 
 function renderResults(data) {
